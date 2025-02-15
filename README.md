@@ -4,4 +4,4 @@ One of my most informative and interactive projects. Speed and distances are exa
 Demo / Демонстрация: https://github.com/user-attachments/assets/c5a43cbd-a81b-4ae5-a169-ccfa03adad25<br />
 ![image](https://github.com/user-attachments/assets/11af1819-3ee7-4f4f-8601-1e0126d0b65f)
 ![image](https://github.com/user-attachments/assets/7967216c-7a43-4e69-a071-3300a8500fb3)
-![image](https://github.com/user-attachments/assets/046d978a-9070-4c26-915e-59aa1f43151)
+![image](https://github.com/user-attachments/assets/d5ad1d9d-9c22-449c-8cac-2b507b1b3640)
