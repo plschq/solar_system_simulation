@@ -15,7 +15,7 @@ public final class TimeController {
     
     public static void init() {
         SolarSystemScene.scene.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            if (e.getCode().equals(KeyCode.RIGHT)) {
+            if (e.getCode().equals(KeyCode.RIGHT) || e.getCode().equals(KeyCode.D)) {
                 
                 if (VALUE == 1) {VALUE = 2.5;}
                 else if (VALUE == 2.5) {VALUE = 5;}
@@ -24,7 +24,7 @@ public final class TimeController {
                 
                 SolarSystemScene.SPEED = VALUE * Math.pow(10, POWER);
                         
-            } else if (e.getCode().equals(KeyCode.LEFT)) {
+            } else if (e.getCode().equals(KeyCode.LEFT) || e.getCode().equals(KeyCode.A)) {
                 
                 if (VALUE == 1) {VALUE = 7.5; POWER -= 1;}
                 else if (VALUE == 2.5) {VALUE = 1;}

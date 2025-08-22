@@ -1,14 +1,12 @@
 package sss.scenes.solarSystemScene.controllers;
 
 
-import javafx.scene.Cursor;
 import sss.Window;
 import sss.dataclasses.XY;
 import sss.scenes.solarSystemScene.SolarSystemScene;
 
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
+import javafx.scene.Cursor;
+import javafx.scene.input.*;
 
 
 public final class CameraController {
@@ -20,7 +18,7 @@ public final class CameraController {
     public static void init() {
         
         SolarSystemScene.scene.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-            if (!e.getButton().equals(MouseButton.SECONDARY)) {return;}
+            if (!e.getButton().equals(MouseButton.PRIMARY)) {return;}
     
             CameraController.lastMousePressed = new XY(
                     e.getSceneX(),
@@ -33,7 +31,7 @@ public final class CameraController {
         });
         
         SolarSystemScene.scene.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
-            if (!e.getButton().equals(MouseButton.SECONDARY)) {return;}
+            if (!e.getButton().equals(MouseButton.PRIMARY)) {return;}
             
             SolarSystemScene.root.setTranslateX(CameraController.lastTranslate.x.getMeters() -
                     CameraController.lastMousePressed.x.getMeters() + e.getSceneX());
@@ -41,11 +39,10 @@ public final class CameraController {
                     CameraController.lastMousePressed.y.getMeters() + e.getSceneY());
             
             SolarSystemScene.updateLabels();
-            SolarSystemScene.updateCenter();
         });
     
         SolarSystemScene.scene.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
-            if (!e.getButton().equals(MouseButton.SECONDARY)) {return;}
+            if (!e.getButton().equals(MouseButton.PRIMARY)) {return;}
             
             SolarSystemScene.scene.setCursor(Cursor.DEFAULT);
         });
@@ -53,16 +50,35 @@ public final class CameraController {
         SolarSystemScene.scene.addEventHandler(ScrollEvent.SCROLL, e -> {
             double step = 1.075;
             if (e.getDeltaY() > 0) {
-                SolarSystemScene.root.setTranslateX((SolarSystemScene.root.getTranslateX() - e.getSceneX()) * step + Window.stage.getWidth() * 0.5);
-                SolarSystemScene.root.setTranslateY((SolarSystemScene.root.getTranslateY() - e.getSceneY()) * step + Window.stage.getHeight() * .5);
+                SolarSystemScene.root.setTranslateX((SolarSystemScene.root.getTranslateX() - e.getSceneX()) * step + e.getSceneX());
+                SolarSystemScene.root.setTranslateY((SolarSystemScene.root.getTranslateY() - e.getSceneY()) * step + e.getSceneY());
                 SolarSystemScene.ZOOM *= step;
                 SolarSystemScene.update();
             } else if (e.getDeltaY() < 0) {
-                SolarSystemScene.root.setTranslateX((SolarSystemScene.root.getTranslateX() - e.getSceneX()) / step + Window.stage.getWidth() * 0.5);
-                SolarSystemScene.root.setTranslateY((SolarSystemScene.root.getTranslateY() - e.getSceneY()) / step + Window.stage.getHeight() * .5);
+                SolarSystemScene.root.setTranslateX((SolarSystemScene.root.getTranslateX() - e.getSceneX()) / step + e.getSceneX());
+                SolarSystemScene.root.setTranslateY((SolarSystemScene.root.getTranslateY() - e.getSceneY()) / step + e.getSceneY());
                 SolarSystemScene.ZOOM /= step;
                 SolarSystemScene.update();
-            } SolarSystemScene.updateLabels(); SolarSystemScene.updateCenter();
+            } SolarSystemScene.updateLabels();
+        });
+    
+        SolarSystemScene.scene.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+            double step = 1.075;
+            if (e.getCode().equals(KeyCode.UP) || e.getCode().equals(KeyCode.W)) {
+                SolarSystemScene.root.setTranslateX((SolarSystemScene.root.getTranslateX() -
+                        Window.stage.getWidth() * 0.5) * step + Window.stage.getWidth() * 0.5);
+                SolarSystemScene.root.setTranslateY((SolarSystemScene.root.getTranslateY() -
+                        Window.stage.getHeight() * .5) * step + Window.stage.getHeight() * .5);
+                SolarSystemScene.ZOOM *= step;
+                SolarSystemScene.update();
+            } else if (e.getCode().equals(KeyCode.DOWN) || e.getCode().equals(KeyCode.S)) {
+                SolarSystemScene.root.setTranslateX((SolarSystemScene.root.getTranslateX() -
+                        Window.stage.getWidth() * 0.5) / step + Window.stage.getWidth() * 0.5);
+                SolarSystemScene.root.setTranslateY((SolarSystemScene.root.getTranslateY() -
+                        Window.stage.getHeight() * .5) / step + Window.stage.getHeight() * .5);
+                SolarSystemScene.ZOOM /= step;
+                SolarSystemScene.update();
+            } SolarSystemScene.updateLabels();
         });
         
     }
