@@ -521,7 +521,77 @@ public final class Planets {
                 0.0035,
                 -1);
     
-        // 1 Ceres
+        // Charon
+        final Planet charon = new Planet(
+                new Orbit(
+                        pluto,
+                        new Distance(1.95914e7),
+                        0.0002,
+                        6.3872304),
+                1.586e21,
+                new Distance(6.06e5),
+                "unset.png",
+                "Charon",
+                300,
+                0);
+    
+        // Styx
+        final Planet styx = new Planet(
+                new Orbit(
+                        pluto,
+                        new Distance(4.2656e7),
+                        0.005787,
+                        20.16155),
+                7.5e15,
+                new Distance(1.1e4),
+                "unset.png",
+                "Styx",
+                850,
+                0);
+    
+        // Nix
+        final Planet nix = new Planet(
+                new Orbit(
+                        pluto,
+                        new Distance(4.8694e7),
+                        0.002036,
+                        24.85463),
+                4.5e16,
+                new Distance(3.8e4),
+                "unset.png",
+                "Nix",
+                300,
+                0);
+    
+        // Kerberos
+        final Planet kerberos = new Planet(
+                new Orbit(
+                        pluto,
+                        new Distance(5.7783e7),
+                        0.00328,
+                        32.16756),
+                1.65e16,
+                new Distance(1.27e4),
+                "unset.png",
+                "Kerberos",
+                650,
+                0);
+    
+        // Hydra
+        final Planet hydra = new Planet(
+                new Orbit(
+                        pluto,
+                        new Distance(6.4738e7),
+                        0.005862,
+                        38.20177),
+                4.8e16,
+                new Distance(3.93e4),
+                "unset.png",
+                "Hydra",
+                185,
+                0);
+    
+        // Ceres
         final Planet ceres = new Planet(
                 new Orbit(
                         sun,
@@ -531,7 +601,7 @@ public final class Planets {
                 9.393e20,
                 new Distance(4.635e5),
                 "ceres.png",
-                "1 Ceres",
+                "Ceres",
                 0.026,
                 -1);
     
@@ -548,6 +618,20 @@ public final class Planets {
                 "Eris",
                 0.0035,
                 -1);
+    
+        // Dysnomia
+        final Planet dysnomia = new Planet(
+                new Orbit(
+                        eris,
+                        new Distance(3.7273e7),
+                        0.0062,
+                        15.785899),
+                4e20,
+                new Distance(3.16e5),
+                "unset.png",
+                "Dysnomia",
+                650,
+                0);
         
         // Makemake
         final Planet makemake = new Planet(
@@ -562,6 +646,20 @@ public final class Planets {
                 "Makemake",
                 0.0035,
                 -1);
+        
+        // S/2015 (136472) 1
+        final Planet S2015_136472_1 = new Planet(
+                new Orbit(
+                        makemake,
+                        new Distance(2.11e7),
+                        0,  // unknown
+                        12.4),
+                1e15,  // unknown
+                new Distance(8.75e4),
+                "unset.png",
+                "S/2015 (136472) 1",
+                2200,
+                0);
     
         // Haumea
         final Planet haumea = new Planet(
@@ -576,6 +674,34 @@ public final class Planets {
                 "Haumea",
                 0.0035,
                 -1);
+    
+        // Hi'iaka
+        final Planet hi_iaka = new Planet(
+                new Orbit(
+                        haumea,
+                        new Distance(4.988e7),
+                        0.0513,
+                        49.12),
+                1.79e19,
+                new Distance(1.6e5),
+                "unset.png",
+                "Hi'iaka",
+                240,
+                0);
+    
+        // Namaka
+        final Planet namaka = new Planet(
+                new Orbit(
+                        haumea,
+                        new Distance(2.5657e7),
+                        0.249,
+                        18.2783),
+                1.79e18,
+                new Distance(8.5e4),
+                "unset.png",
+                "Namaka",
+                775,
+                0);
         
     
         Planets.all.add(mercury); sun.addMoon(mercury);
@@ -621,14 +747,23 @@ public final class Planets {
         Planets.all.add(galatea); neptune.addMoon(galatea);
         
         Planets.all.add(pluto); sun.addMoon(pluto);
+        Planets.all.add(charon); pluto.addMoon(charon);
+        Planets.all.add(styx); pluto.addMoon(styx);
+        Planets.all.add(nix); pluto.addMoon(nix);
+        Planets.all.add(kerberos); pluto.addMoon(kerberos);
+        Planets.all.add(hydra); pluto.addMoon(hydra);
         
         Planets.all.add(ceres); sun.addMoon(ceres);
         
         Planets.all.add(eris); sun.addMoon(eris);
+        Planets.all.add(dysnomia); eris.addMoon(dysnomia);
         
         Planets.all.add(makemake); sun.addMoon(makemake);
+        Planets.all.add(S2015_136472_1); makemake.addMoon(S2015_136472_1);
         
         Planets.all.add(haumea); sun.addMoon(haumea);
+        Planets.all.add(hi_iaka); haumea.addMoon(hi_iaka);
+        Planets.all.add(namaka); haumea.addMoon(namaka);
         
     }
     

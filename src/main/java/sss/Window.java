@@ -16,7 +16,7 @@ public final class Window extends Application {
     
     public static void init(Stage stage) {
         Window.stage = stage;
-        Window.stage.setTitle("Solar System Simulation [v1.1.1]");
+        Window.stage.setTitle("Solar System Simulation [v1.1.2]");
         // Window.stage.setScene();
         Window.stage.setFullScreen(false);
         Window.stage.setAlwaysOnTop(false);

@@ -3,6 +3,7 @@ package sss.scenes.solarSystemScene.components;
 
 import javafx.scene.input.MouseEvent;
 import sss.App;
+import sss.Window;
 import sss.dataclasses.Distance;
 import sss.dataclasses.Vector;
 import sss.dataclasses.XY;
@@ -104,6 +105,8 @@ public class Planet {
         this.name = name;
         this.minZoom = minZoom;
         this.priority = priority;
+        
+        this.velocity.angle = Math.random() * 360;
     
         this.label.setText(this.name);
         this.label.setFont(new Font("Arial", 12));
@@ -111,10 +114,9 @@ public class Planet {
             this.isHovered = true;
             this.showOrbitBright();
             this.showLabelBright();
-        });
-        this.label.addEventHandler(MouseEvent.MOUSE_EXITED, e -> {
+        }); this.label.addEventHandler(MouseEvent.MOUSE_EXITED, e -> {
             this.isHovered = false;
-            if (this.priority != 0) {
+            if (this.priority == -1) {
                 this.showOrbitDim();
                 this.showLabelDim();
             }
@@ -227,16 +229,22 @@ public class Planet {
         
         this.moons.forEach(Planet::update);
         
-        // Planet image optimization (hiding when too small to display)
-        if (this.radius.getPixels() * 2 * SolarSystemScene.ZOOM <= 1) {
+        // Planet image optimization (hiding when too small to display
+        // or the planet is out of bounds)
+        if (this.radius.getPixels() * 2 * SolarSystemScene.ZOOM <= 1 || this.isPlanetImageOutOfBounds()) {
             this.hidePlanetImage();
-        } else {this.showPlanetImage();}
+        } else {
+            this.showPlanetImage();
+        }
     
-        // Orbit optimization (hiding when too small to display)
-        if (this.orbit != null && this.orbit.getLargeSemiAxis().getPixels() * SolarSystemScene.ZOOM <= 3) {
+        // Orbit optimization (hiding when too small to display
+        // or the orbit is out of bounds)
+        if (this.orbit != null && (this.orbit.getLargeSemiAxis().getPixels() *
+                SolarSystemScene.ZOOM <= 3 || this.isOrbitOutOfBounds())) {
             this.hideOrbit();
         } else {
-            if (this.priority == 0 || this.isHovered) {
+            if (this.priority == 0 || this.isHovered ||
+                    this.radius.getPixels() * 2 * SolarSystemScene.ZOOM > 0.1) {
                 this.showOrbitBright();
             } else {this.showOrbitDim();}
         }
@@ -251,22 +259,62 @@ public class Planet {
         } else {this.showMoons();}
         
         // Label optimization
-        if (SolarSystemScene.ZOOM < this.minZoom) {
+        if (SolarSystemScene.ZOOM < this.minZoom || this.isLabelOfBounds()) {
             this.hideLabel();
         } else {
             if (this.priority == 0 || this.radius.getPixels()
-                    * 2 * SolarSystemScene.ZOOM > 0.5 || this.isHovered) {
+                    * 2 * SolarSystemScene.ZOOM > 0.1 || this.isHovered) {
                 this.showLabelBright();
             } else {this.showLabelDim();}
         }
         
     }
     
-    public static XY getAbsPos(Planet planet) {
-        return (planet.orbit != null) ? new XY(
-                planet.position.x.getMeters() + Planet.getAbsPos(planet.orbit.parent).x.getMeters(),
-                planet.position.y.getMeters() + Planet.getAbsPos(planet.orbit.parent).y.getMeters()
-        ) : planet.position;
+    public XY getAbsPos() {
+        return (this.orbit != null) ? new XY(
+                this.anchor.getTranslateX() + this.orbit.parent.getAbsPos().x.getMeters(),
+                this.anchor.getTranslateY() + this.orbit.parent.getAbsPos().y.getMeters()
+        ) : new XY(this.anchor.getTranslateX(), this.anchor.getTranslateY());
+    }
+    
+    public XY getScreenPos() {
+        return new XY(
+                this.getAbsPos().x.getMeters() + SolarSystemScene.root.getTranslateX(),
+                this.getAbsPos().y.getMeters() + SolarSystemScene.root.getTranslateY());
+    }
+    
+    public boolean isPlanetImageOutOfBounds() {
+        final XY screenPos = this.getScreenPos();
+        final double imgWidth = this.planetImage.getFitWidth();
+        final double imgHeight = this.planetImage.getFitHeight();
+        
+        return !(-2*imgWidth < screenPos.x.getMeters() &&
+                screenPos.x.getMeters() < Window.stage.getWidth() + imgWidth &&
+                -2*imgHeight < screenPos.y.getMeters() &&
+                screenPos.y.getMeters() < Window.stage.getHeight() + imgHeight);
+    }
+    
+    public boolean isLabelOfBounds() {
+        final XY screenPos = this.getScreenPos();
+        final double lblWidth = this.label.getWidth();
+        final double lblHeight = this.label.getHeight();
+        
+        return !(-2*lblWidth < screenPos.x.getMeters() &&
+                screenPos.x.getMeters() < Window.stage.getWidth() + lblWidth &&
+                -2*lblHeight < screenPos.y.getMeters() &&
+                screenPos.y.getMeters() < Window.stage.getHeight() + lblHeight);
+    }
+    
+    public boolean isOrbitOutOfBounds() {
+        // final XY screenPos = this.getScreenPos();
+        // final double xSemiAxis = this.orbit.orbitNode.getRadiusX();
+        // final double ySemiAxis = this.orbit.orbitNode.getRadiusY();
+        //
+        // return !(-xSemiAxis - 10 < screenPos.x.getMeters() &&
+        //         screenPos.x.getMeters() < Window.stage.getWidth() + xSemiAxis &&
+        //         -2*ySemiAxis < screenPos.y.getMeters() &&
+        //         screenPos.y.getMeters() < Window.stage.getHeight());
+        return false;
     }
     
 }
