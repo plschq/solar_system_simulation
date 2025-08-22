@@ -325,6 +325,90 @@ public final class Planets {
                 0.0035,
                 0);
     
+        // Puck
+        final Planet puck = new Planet(
+                new Orbit(
+                        uranus,
+                        new Distance(86004444),
+                        0.00012,
+                        0.76183287),
+                2.9e18,
+                new Distance(8.1e4),
+                "unset.png",
+                "Puck",
+                120,
+                0);
+    
+        // Miranda
+        final Planet miranda = new Planet(
+                new Orbit(
+                        uranus,
+                        new Distance(1.299e8),
+                        0.0013,
+                        1.413),
+                6.59e19,
+                new Distance(2.358e5),
+                "unset.png",
+                "Miranda",
+                100,
+                0);
+    
+        // Ariel
+        final Planet ariel = new Planet(
+                new Orbit(
+                        uranus,
+                        new Distance(1.9102e8),
+                        0.0012,
+                        2.52),
+                1.353e21,
+                new Distance(5.789e5),
+                "unset.png",
+                "Ariel",
+                75,
+                0);
+    
+        // Umbriel
+        final Planet umbriel = new Planet(
+                new Orbit(
+                        uranus,
+                        new Distance(2.66e8),
+                        0.0039,
+                        4.144),
+                1.172e21,
+                new Distance(5.847e5),
+                "unset.png",
+                "Umbriel",
+                40,
+                0);
+    
+        // Titania
+        final Planet titania = new Planet(
+                new Orbit(
+                        uranus,
+                        new Distance(4.363e8),
+                        0.0011,
+                        8.706),
+                3.527e21,
+                new Distance(7.884e5),
+                "unset.png",
+                "Titania",
+                30,
+                0);
+    
+        // Oberon
+        final Planet oberon = new Planet(
+                new Orbit(
+                        uranus,
+                        new Distance(5.8352e8),
+                        0.0014,
+                        13.463),
+                3.014e21,
+                new Distance(7.614e5),
+                "unset.png",
+                "Oberon",
+                20,
+                0);
+    
         // Neptune
         final Planet neptune = new Planet(
                 new Orbit(
@@ -337,6 +421,90 @@ public final class Planets {
                 "neptune.png",
                 "Neptune",
                 0.002,
+                0);
+    
+        // Triton
+        final Planet triton = new Planet(
+                new Orbit(
+                        neptune,
+                        new Distance(3.54759e8),
+                        0.000016,
+                        -5.88),
+                2.14e22,
+                new Distance(1.3534e6),
+                "unset.png",
+                "Triton",
+                30,
+                0);
+    
+        // Proteus
+        final Planet proteus = new Planet(
+                new Orbit(
+                        neptune,
+                        new Distance(1.17647e8),
+                        0.0004,
+                        1.1223),
+                5e19,
+                new Distance(2.1e5),
+                "unset.png",
+                "Proteus",
+                110,
+                0);
+    
+        // Nereid
+        final Planet nereid = new Planet(
+                new Orbit(
+                        neptune,
+                        new Distance(5.5134e9),
+                        0.7512,
+                        360.1362),
+                3.1e19,
+                new Distance(1.7e5),
+                "unset.png",
+                "Nereid",
+                5,
+                0);
+    
+        // Larissa
+        final Planet larissa = new Planet(
+                new Orbit(
+                        neptune,
+                        new Distance(7.3548e7),
+                        0.001393,
+                        0.554653),
+                4.9e18,
+                new Distance(9.7e4),
+                "unset.png",
+                "Larissa",
+                170,
+                0);
+    
+        // Despina
+        final Planet despina = new Planet(
+                new Orbit(
+                        neptune,
+                        new Distance(5.2526e7),
+                        0.000224,
+                        0.334655),
+                2.3e18,
+                new Distance(7.5e4),
+                "unset.png",
+                "Despina",
+                700,
+                0);
+    
+        // Galatea
+        final Planet galatea = new Planet(
+                new Orbit(
+                        neptune,
+                        new Distance(6.1953e7),
+                        0.000037,
+                        0.428744),
+                2.12e18,
+                new Distance(8.8e4),
+                "unset.png",
+                "Galatea",
+                550,
                 0);
     
         // Pluto
@@ -411,17 +579,22 @@ public final class Planets {
         
     
         Planets.all.add(mercury); sun.addMoon(mercury);
+        
         Planets.all.add(venus); sun.addMoon(venus);
+        
         Planets.all.add(earth); sun.addMoon(earth);
         Planets.all.add(moon); earth.addMoon(moon);
+        
         Planets.all.add(mars); sun.addMoon(mars);
         Planets.all.add(phobos); mars.addMoon(phobos);
         Planets.all.add(deimos); mars.addMoon(deimos);
+        
         Planets.all.add(jupiter); sun.addMoon(jupiter);
         Planets.all.add(io); jupiter.addMoon(io);
         Planets.all.add(europa); jupiter.addMoon(europa);
         Planets.all.add(ganymede); jupiter.addMoon(ganymede);
         Planets.all.add(callisto); jupiter.addMoon(callisto);
+        
         Planets.all.add(saturn); sun.addMoon(saturn);
         Planets.all.add(mimas); saturn.addMoon(mimas);
         Planets.all.add(enceladus); saturn.addMoon(enceladus);
@@ -430,12 +603,31 @@ public final class Planets {
         Planets.all.add(rhea); saturn.addMoon(rhea);
         Planets.all.add(titan); saturn.addMoon(titan);
         Planets.all.add(iapetus); saturn.addMoon(iapetus);
+        
         Planets.all.add(uranus); sun.addMoon(uranus);
+        Planets.all.add(puck); uranus.addMoon(puck);
+        Planets.all.add(miranda); uranus.addMoon(miranda);
+        Planets.all.add(ariel); uranus.addMoon(ariel);
+        Planets.all.add(umbriel); uranus.addMoon(umbriel);
+        Planets.all.add(titania); uranus.addMoon(titania);
+        Planets.all.add(oberon); uranus.addMoon(oberon);
+        
         Planets.all.add(neptune); sun.addMoon(neptune);
+        Planets.all.add(triton); neptune.addMoon(triton);
+        Planets.all.add(proteus); neptune.addMoon(proteus);
+        Planets.all.add(nereid); neptune.addMoon(nereid);
+        Planets.all.add(larissa); neptune.addMoon(larissa);
+        Planets.all.add(despina); neptune.addMoon(despina);
+        Planets.all.add(galatea); neptune.addMoon(galatea);
+        
         Planets.all.add(pluto); sun.addMoon(pluto);
+        
         Planets.all.add(ceres); sun.addMoon(ceres);
+        
         Planets.all.add(eris); sun.addMoon(eris);
+        
         Planets.all.add(makemake); sun.addMoon(makemake);
+        
         Planets.all.add(haumea); sun.addMoon(haumea);
         
     }
