@@ -38,7 +38,7 @@ public class Orbit {
         // this.slant = slant;
         
         this.treatmentPeriod = treatmentPeriod;
-    
+        
         this.orbitNode = new Ellipse(
                 this.center.x.getPixels(),
                 this.center.y.getPixels(),
@@ -46,9 +46,9 @@ public class Orbit {
                 semiAxes.y.getPixels());
         this.orbitNode.setFill(Color.TRANSPARENT);
         this.orbitNode.setStroke(Color.web("#888"));
-        this.orbitNode.setStrokeWidth(1);
+        this.orbitNode.setStrokeWidth(2);
         // this.orbitNode.setRotate(Math.toDegrees(slant));
-    
+        
         parent.anchor.getChildren().add(this.orbitNode);
     }
     

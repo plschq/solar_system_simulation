@@ -50,7 +50,7 @@ public class Planet {
         if (this.label == null) {
             this.label = new Label(text);
             this.label.setTextFill(Color.web("#ccc"));
-    
+            
             this.anchor.getChildren().add(this.label);
         } else {
             this.label.setText(text);
