@@ -11,9 +11,9 @@ import javafx.scene.paint.Color;
 
 public class Orbit {
     
-    public final Ellipse orbitNode;
+    public final Ellipse orbitNode = new Ellipse();
     
-    public Planet parent;
+    public final Planet parent;
     
     public final XY center;
     public final XY semiAxes;
@@ -27,42 +27,41 @@ public class Orbit {
     
     public Orbit(Planet parent, Distance largeSemiAxis, double eccentricity, double treatmentPeriod) {
         this.parent = parent;
-        this.semiAxes = new XY(largeSemiAxis.getMeters(),
-                largeSemiAxis.getMeters() * Math.sqrt(1 - Math.pow(eccentricity, 2)));
+        this.semiAxes = new XY(largeSemiAxis.getMeters() *
+                Math.sqrt(1 - Math.pow(eccentricity, 2)), largeSemiAxis.getMeters());
         this.eccentricity = eccentricity;
         this.aphelion = new Distance(getLargeSemiAxis().getMeters() * (1 + eccentricity));
         this.perihelion = new Distance(getLargeSemiAxis().getMeters() * (1 - eccentricity));
         this.treatmentPeriod = treatmentPeriod;
     
-        this.center = new XY(0, Math.abs(aphelion.getMeters()-perihelion.getMeters()));
+        this.center = new XY(0, 0.5 * (this.aphelion.getMeters() - this.perihelion.getMeters()));
         
-        this.orbitNode = new Ellipse(
-                this.center.x.getPixels(),
-                this.center.y.getPixels(),
-                semiAxes.x.getPixels(),
-                semiAxes.y.getPixels());
         this.orbitNode.setFill(Color.TRANSPARENT);
         this.orbitNode.setStrokeWidth(2);
+        this.orbitNode.setViewOrder(1);
         
         this.parent.anchor.getChildren().add(this.orbitNode);
     }
     
     
-    public void update(boolean isHidden) {
+    public void showOrbitDim() {
+        this.orbitNode.setStroke(Color.web("#fff1"));
+    } public void showOrbitBright() {
+        this.orbitNode.setStroke(Color.web("#fff3"));
+    } public void hideOrbit() {
+        this.orbitNode.setStroke(Color.TRANSPARENT);
+    }
+    
+    public void update() {
         this.orbitNode.setRadiusX(this.semiAxes.x.getPixels() * SolarSystemScene.ZOOM);
         this.orbitNode.setRadiusY(this.semiAxes.y.getPixels() * SolarSystemScene.ZOOM);
         this.orbitNode.setCenterX(this.center.x.getPixels() * SolarSystemScene.ZOOM);
         this.orbitNode.setCenterY(this.center.y.getPixels() * SolarSystemScene.ZOOM);
-        
-        if (isHidden) {
-            this.orbitNode.setStroke(Color.web("#8884"));
-        } else {
-            this.orbitNode.setStroke(Color.web("#888"));
-        }
     }
     
     public Distance getLargeSemiAxis() {
-        return new Distance(Math.max(this.semiAxes.x.getMeters(), this.semiAxes.y.getMeters()));
+        // return new Distance(Math.max(this.semiAxes.x.getMeters(), this.semiAxes.y.getMeters()));
+        return this.semiAxes.y;
     }
     
 }

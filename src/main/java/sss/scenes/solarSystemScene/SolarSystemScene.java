@@ -17,6 +17,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.text.Font;
+import javafx.geometry.Insets;
+
+import java.io.FileNotFoundException;
 
 
 public final class SolarSystemScene {
@@ -40,7 +43,7 @@ public final class SolarSystemScene {
     public static Timeline timeline;
     
     
-    public static void init() {
+    public static void init() throws FileNotFoundException {
         scene.setCursor(Cursor.DEFAULT);
         scene.setFill(Color.web("#050010"));
         scene.setCamera(new PerspectiveCamera(false));
@@ -53,20 +56,22 @@ public final class SolarSystemScene {
         initLabels();
         
         FullscreenController.init(scene);
+        Planets.init();
         CameraController.init();
         TimeController.init();
-        Planets.init();
         
         startTimeline();
     }
     
     public static void initLabels() {
         timeAccelerationLabel.setTextFill(Color.web("#fff"));
-        timeAccelerationLabel.setBackground(Background.fill(Color.web("#050010")));
+        timeAccelerationLabel.setBackground(Background.fill(Color.web("#fff2")));
+        timeAccelerationLabel.setPadding(new Insets(5));
         timeAccelerationLabel.setFont(new Font("Arial", 15));
     
         zoomLabel.setTextFill(Color.web("#fff"));
-        zoomLabel.setBackground(Background.fill(Color.web("#050010")));
+        zoomLabel.setBackground(Background.fill(Color.web("#fff2")));
+        zoomLabel.setPadding(new Insets(5));
         zoomLabel.setFont(new Font("Arial", 15));
     
         labels.setViewOrder(-1);
@@ -99,10 +104,14 @@ public final class SolarSystemScene {
     public static void update() {
         rootPlanet.update();
         
-        if (rootPlanet.label.getText().equals("Sun") && ZOOM <= 0.002) {
-            rootPlanet.label.setText("Solar system");
-        } else if (rootPlanet.label.getText().equals("Solar system") && ZOOM > 0.002) {
-            rootPlanet.label.setText("Sun");
+        for (Planet planet : Planets.all) {
+            if (planet.label.getText().equals("Sun") &&
+                    !planet.anchor.getChildren().contains(planet.moonsAnchor)) {
+                planet.label.setText("Solar system"); break;
+            } else if (rootPlanet.label.getText().equals("Solar system") &&
+                    planet.anchor.getChildren().contains(planet.moonsAnchor)) {
+                planet.label.setText("Sun"); break;
+            }
         }
     }
     

@@ -6,6 +6,8 @@ import sss.scenes.solarSystemScene.SolarSystemScene;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.io.FileNotFoundException;
+
 
 public final class Window extends Application {
     
@@ -14,7 +16,7 @@ public final class Window extends Application {
     
     public static void init(Stage stage) {
         Window.stage = stage;
-        Window.stage.setTitle("Solar System Simulation [v1.0.2]");
+        Window.stage.setTitle("Solar System Simulation [v1.0.3]");
         // Window.stage.setScene();
         Window.stage.setFullScreen(false);
         Window.stage.setAlwaysOnTop(false);
@@ -39,7 +41,7 @@ public final class Window extends Application {
     
     public static void show() {Window.stage.show();}
     
-    @Override public void start(Stage stage) {Launcher.start(stage);}
+    @Override public void start(Stage stage) throws FileNotFoundException {Launcher.start(stage);}
     @Override public void stop() {Launcher.stop();}
     
     public static void main(String[] args) {Window.launch(args);}

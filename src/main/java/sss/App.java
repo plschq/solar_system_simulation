@@ -5,10 +5,12 @@ import sss.dataclasses.Distance;
 import sss.dataclasses.XY;
 import sss.scenes.solarSystemScene.SolarSystemScene;
 
+import java.io.FileNotFoundException;
+
 
 public final class App {
     
-    public static void init() {
+    public static void init() throws FileNotFoundException {
         SolarSystemScene.init();
         Window.stage.setScene(SolarSystemScene.scene);
     }

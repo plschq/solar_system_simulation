@@ -7,8 +7,7 @@ import sss.scenes.solarSystemScene.SolarSystemScene;
 import sss.scenes.solarSystemScene.components.Orbit;
 import sss.scenes.solarSystemScene.components.Planet;
 
-import javafx.scene.paint.Color;
-
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 
@@ -17,22 +16,23 @@ public final class Planets {
     public static final ArrayList<Planet> all = new ArrayList<>();
     
     
-    public static void init() {
+    public static void init() throws FileNotFoundException {
         
         // Sun
         Planet sun = new Planet(
                 new XY(0, 0),
                 1.98892e30,
                 new Distance(6.957e8),
-                Color.web("fdc96e"),
+                "sun.png",
                 "Sun",
-                -1);
-        Planets.all.add(sun);
-        SolarSystemScene.setRootPlanet(sun);
-        
+                -1,
+                0);
     
+        SolarSystemScene.setRootPlanet(sun); Planets.all.add(sun);
+    
+        
         // Mercury
-        Planet mercury = new Planet(  // planet
+        final Planet mercury = new Planet(  // planet
                 new Orbit(  // orbit
                         sun,  // orbit center
                         Distance.byAU(0.38709927),  // large semi-axis
@@ -40,14 +40,13 @@ public final class Planets {
                         87.969),  // rotation period (days)
                 3.33022e23,  // mass
                 new Distance(2.4397e6),  // radius
-                Color.web("#d6d6d6"),  // color
+                "mercury.png",  // image path
                 "Mercury",  // name (label text)
-                0.25);  // min zoom
-        sun.addMoon(mercury);
-        Planets.all.add(mercury);
+                0.2,  // min zoom
+                0);
     
         // Venus
-        Planet venus = new Planet(
+        final Planet venus = new Planet(
                 new Orbit(
                         sun,
                         Distance.byAU(0.723332),
@@ -55,14 +54,13 @@ public final class Planets {
                         224.701),
                 4.8675e24,
                 new Distance(6.0518e6),
-                Color.web("#a6b000"),
+                "venus.png",
                 "Venus",
-                0.25);
-        sun.addMoon(venus);
-        Planets.all.add(venus);
+                0.15,
+                0);
     
         // Earth
-        Planet earth = new Planet(
+        final Planet earth = new Planet(
                 new Orbit(
                         sun,
                         Distance.byAU(1.00000261),
@@ -70,14 +68,13 @@ public final class Planets {
                         365.25),
                 5.9742e24,
                 new Distance(6.371e6),
-                Color.web("#0dc865"),
+                "earth.png",
                 "Earth",
-                0.1);
-        sun.addMoon(earth);
-        Planets.all.add(earth);
+                0.035,
+                0);
     
         // Moon
-        Planet moon = new Planet(
+        final Planet moon = new Planet(
                 new Orbit(
                         earth,
                         Distance.byAU(0.00257),
@@ -85,14 +82,13 @@ public final class Planets {
                         27.321661),
                 7.3477e22,
                 new Distance(1.7371e6),
-                Color.web("#fff"),
+                "moon.png",
                 "Moon",
-                55);
-        earth.addMoon(moon);
-        Planets.all.add(moon);
+                45,
+                0);
     
         // Mars
-        Planet mars = new Planet(
+        final Planet mars = new Planet(
                 new Orbit(
                         sun,
                         Distance.byAU(1.523662),
@@ -100,14 +96,13 @@ public final class Planets {
                         686.98),
                 6.4171e23,
                 new Distance(3.3895e6),
-                Color.web("#e53100"),
+                "mars.png",
                 "Mars",
-                0.25);
-        sun.addMoon(mars);
-        Planets.all.add(mars);
+                0.08,
+                0);
     
         // Phobos
-        Planet phobos = new Planet(
+        final Planet phobos = new Planet(
                 new Orbit(
                         mars,
                         new Distance(9377200),
@@ -115,14 +110,13 @@ public final class Planets {
                         0.31875),
                 1.072e16,
                 new Distance(1.11e4),
-                Color.web("#8a7062"),
+                "phobos.png",
                 "Phobos",
-                2000);
-        mars.addMoon(phobos);
-        Planets.all.add(phobos);
+                2500,
+                0);
     
         // Deimos
-        Planet deimos = new Planet(
+        final Planet deimos = new Planet(
                 new Orbit(
                         mars,
                         new Distance(23458000),
@@ -130,14 +124,13 @@ public final class Planets {
                         1.26244213),
                 1.48e15,
                 new Distance(6.2e3),
-                Color.web("#a98e75"),
+                "deimos.png",
                 "Deimos",
-                750);
-        mars.addMoon(deimos);
-        Planets.all.add(deimos);
+                800,
+                0);
     
         // Jupiter
-        Planet jupiter = new Planet(
+        final Planet jupiter = new Planet(
                 new Orbit(
                         sun,
                         Distance.byAU(5.204267),
@@ -145,14 +138,13 @@ public final class Planets {
                         4332.589),
                 1.8987e27,
                 new Distance(6.9911e7),
-                Color.web("#d29223"),
+                "jupiter.png",
                 "Jupiter",
-                0.015);
-        sun.addMoon(jupiter);
-        Planets.all.add(jupiter);
+                0.012,
+                0);
     
         // Saturn
-        Planet saturn = new Planet(
+        final Planet saturn = new Planet(
                 new Orbit(
                         sun,
                         Distance.byAU(9.536676),
@@ -160,14 +152,13 @@ public final class Planets {
                         10759.22),
                 5.6846e26,
                 new Distance(5.8232e7),
-                Color.web("#d29223"),
+                "saturn.png",
                 "Saturn",
-                0.01);
-        sun.addMoon(saturn);
-        Planets.all.add(saturn);
+                0.006,
+                0);
     
         // Uranus
-        Planet uranus = new Planet(
+        final Planet uranus = new Planet(
                 new Orbit(
                         sun,
                         Distance.byAU(19.22941195),
@@ -175,14 +166,13 @@ public final class Planets {
                         30685.4),
                 8.6813e25,
                 new Distance(2.5362e7),
-                Color.web("#69b8d8"),
+                "uranus.png",
                 "Uranus",
-                0.005);
-        sun.addMoon(uranus);
-        Planets.all.add(uranus);
+                0.0035,
+                0);
     
         // Neptune
-        Planet neptune = new Planet(
+        final Planet neptune = new Planet(
                 new Orbit(
                         sun,
                         Distance.byAU(30.10366151),
@@ -190,11 +180,98 @@ public final class Planets {
                         60190.03),
                 1.0243e26,
                 new Distance(2.4622e7),
-                Color.web("#104ca7"),
+                "neptune.png",
                 "Neptune",
-                0.005);
-        sun.addMoon(neptune);
-        Planets.all.add(neptune);
+                0.002,
+                0);
+    
+        // Pluto
+        final Planet pluto = new Planet(
+                new Orbit(
+                        sun,
+                        Distance.byAU(39.482117),
+                        0.2488273,
+                        90553.02),
+                1.303e22,
+                new Distance(1.1883e6),
+                "pluto.png",
+                "Pluto",
+                0.0035,
+                -1);
+    
+        // 1 Ceres
+        final Planet ceres = new Planet(
+                new Orbit(
+                        sun,
+                        Distance.byAU(2.7653),
+                        0.07934,
+                        1680.5),
+                9.393e20,
+                new Distance(4.635e5),
+                "ceres.png",
+                "1 Ceres",
+                0.026,
+                -1);
+    
+        // Eris
+        final Planet eris = new Planet(
+                new Orbit(
+                        sun,
+                        Distance.byAU(67.781),
+                        0.44068,
+                        203830),
+                1.67e22,
+                new Distance(1.163e6),
+                "eris.png",
+                "Eris",
+                0.0035,
+                -1);
+        
+        // Makemake
+        final Planet makemake = new Planet(
+                new Orbit(
+                        sun,
+                        Distance.byAU(45.436301),
+                        0.16254481,
+                        111867),
+                3e21,
+                new Distance(7.39e5),
+                "makemake.png",
+                "Makemake",
+                0.0035,
+                -1);
+    
+        // Haumea
+        final Planet haumea = new Planet(
+                new Orbit(
+                        sun,
+                        Distance.byAU(43.28708),
+                        0.1920504,
+                        104025),
+                4.006e21,
+                new Distance(8.16e5),
+                "haumea.png",
+                "Haumea",
+                0.0035,
+                -1);
+        
+    
+        Planets.all.add(mercury); sun.addMoon(mercury);
+        Planets.all.add(venus); sun.addMoon(venus);
+        Planets.all.add(earth); sun.addMoon(earth);
+        Planets.all.add(moon); earth.addMoon(moon);
+        Planets.all.add(mars); sun.addMoon(mars);
+        Planets.all.add(phobos); mars.addMoon(phobos);
+        Planets.all.add(deimos); mars.addMoon(deimos);
+        Planets.all.add(jupiter); sun.addMoon(jupiter);
+        Planets.all.add(saturn); sun.addMoon(saturn);
+        Planets.all.add(uranus); sun.addMoon(uranus);
+        Planets.all.add(neptune); sun.addMoon(neptune);
+        Planets.all.add(pluto); sun.addMoon(pluto);
+        Planets.all.add(ceres); sun.addMoon(ceres);
+        Planets.all.add(eris); sun.addMoon(eris);
+        Planets.all.add(makemake); sun.addMoon(makemake);
+        Planets.all.add(haumea); sun.addMoon(haumea);
         
     }
     
