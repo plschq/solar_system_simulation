@@ -143,6 +143,62 @@ public final class Planets {
                 0.012,
                 0);
     
+        // Io
+        final Planet io = new Planet(
+                new Orbit(
+                        jupiter,
+                        new Distance(4.218e8),
+                        0.0041,
+                        1.769137786),
+                8.9319e22,
+                new Distance(1.8213e6),
+                "io.png",
+                "Io",
+                60,
+                0);
+    
+        // Europa
+        final Planet europa = new Planet(
+                new Orbit(
+                        jupiter,
+                        new Distance(6.711e8),
+                        0.0094,
+                        3.551),
+                4.8017e22,
+                new Distance(1.5608e6),
+                "europa.png",
+                "Europa",
+                40,
+                0);
+    
+        // Ganymede
+        final Planet ganymede = new Planet(
+                new Orbit(
+                        jupiter,
+                        new Distance(1.0704e9),
+                        0.0013,
+                        7.15455296),
+                4.8017e22,
+                new Distance(2.6341e6),
+                "ganymede.png",
+                "Ganymede",
+                15,
+                0);
+    
+        // Callisto
+        final Planet callisto = new Planet(
+                new Orbit(
+                        jupiter,
+                        new Distance(1.8827e9),
+                        0.0074,
+                        16.6890184),
+                1.075e23,
+                new Distance(2.4103e6),
+                "callisto.png",
+                "Callisto",
+                8,
+                0);
+    
         // Saturn
         final Planet saturn = new Planet(
                 new Orbit(
@@ -155,6 +211,104 @@ public final class Planets {
                 "saturn.png",
                 "Saturn",
                 0.006,
+                0);
+    
+        // Mimas
+        final Planet mimas = new Planet(
+                new Orbit(
+                        saturn,
+                        new Distance(1.85539e8),
+                        0.0196,
+                        0.942),
+                3.7493e19,
+                new Distance(1.982e5),
+                "mimas.png",
+                "Mimas",
+                185,
+                0);
+    
+        // Enceladus
+        final Planet enceladus = new Planet(
+                new Orbit(
+                        saturn,
+                        new Distance(2.37948e8),
+                        0.0047,
+                        1.370218),
+                1.08022e20,
+                new Distance(2.521e5),
+                "enceladus.png",
+                "Enceladus",
+                120,
+                0);
+    
+        // Tethys
+        final Planet tethys = new Planet(
+                new Orbit(
+                        saturn,
+                        new Distance(2.94672e8),
+                        0.0001,
+                        1.887802),
+                6.17449e20,
+                new Distance(5.311e5),
+                "tethys.png",
+                "Tethys",
+                85,
+                0);
+    
+        // Dione
+        final Planet dione = new Planet(
+                new Orbit(
+                        saturn,
+                        new Distance(3.774e8),
+                        0.0022,
+                        2.77),
+                1.095452e21,
+                new Distance(5.617e5),
+                "dione.png",
+                "Dione",
+                50,
+                0);
+    
+        // Rhea
+        final Planet rhea = new Planet(
+                new Orbit(
+                        saturn,
+                        new Distance(5.271e8),
+                        0.0013,
+                        4.518),
+                2.306518e21,
+                new Distance(7.635e5),
+                "rhea.png",
+                "Rhea",
+                20,
+                0);
+    
+        // Titan
+        final Planet titan = new Planet(
+                new Orbit(
+                        saturn,
+                        new Distance(1.22187e9),
+                        0.0288,
+                        15.945),
+                1.3452e23,
+                new Distance(2.576e6),
+                "titan.png",
+                "Titan",
+                10,
+                0);
+    
+        // Iapetus
+        final Planet iapetus = new Planet(
+                new Orbit(
+                        saturn,
+                        new Distance(3.56082e9),
+                        0.0286125,
+                        79.3215),
+                1.805635e21,
+                new Distance(7.343e5),
+                "iapetus.png",
+                "Iapetus",
+                4,
                 0);
     
         // Uranus
@@ -264,7 +418,18 @@ public final class Planets {
         Planets.all.add(phobos); mars.addMoon(phobos);
         Planets.all.add(deimos); mars.addMoon(deimos);
         Planets.all.add(jupiter); sun.addMoon(jupiter);
+        Planets.all.add(io); jupiter.addMoon(io);
+        Planets.all.add(europa); jupiter.addMoon(europa);
+        Planets.all.add(ganymede); jupiter.addMoon(ganymede);
+        Planets.all.add(callisto); jupiter.addMoon(callisto);
         Planets.all.add(saturn); sun.addMoon(saturn);
+        Planets.all.add(mimas); saturn.addMoon(mimas);
+        Planets.all.add(enceladus); saturn.addMoon(enceladus);
+        Planets.all.add(tethys); saturn.addMoon(tethys);
+        Planets.all.add(dione); saturn.addMoon(dione);
+        Planets.all.add(rhea); saturn.addMoon(rhea);
+        Planets.all.add(titan); saturn.addMoon(titan);
+        Planets.all.add(iapetus); saturn.addMoon(iapetus);
         Planets.all.add(uranus); sun.addMoon(uranus);
         Planets.all.add(neptune); sun.addMoon(neptune);
         Planets.all.add(pluto); sun.addMoon(pluto);
