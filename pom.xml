@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>sss</groupId>
-    <artifactId>solar_system_simulation_v1_1_2</artifactId>
+    <artifactId>solar_system_simulation_v1_2_0</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>solar_system_simulation_v1_1_2</name>
+    <name>solar_system_simulation_v1_2_0</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.8.2</junit.version>
@@ -21,6 +21,11 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>18</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kordamp.bootstrapfx</groupId>
+            <artifactId>bootstrapfx-core</artifactId>
+            <version>0.4.0</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

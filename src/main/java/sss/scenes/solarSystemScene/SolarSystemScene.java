@@ -5,6 +5,7 @@ import sss.Planets;
 import sss.controllers.FullscreenController;
 import sss.scenes.solarSystemScene.components.Planet;
 import sss.scenes.solarSystemScene.controllers.CameraController;
+import sss.scenes.solarSystemScene.controllers.FocusController;
 import sss.scenes.solarSystemScene.controllers.TimeController;
 
 import javafx.animation.KeyFrame;
@@ -14,10 +15,10 @@ import javafx.scene.*;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.text.Font;
 import javafx.geometry.Insets;
+import javafx.scene.layout.VBox;
 
 import java.io.FileNotFoundException;
 
@@ -31,12 +32,13 @@ public final class SolarSystemScene {
     public static double SCALE = 250 / SolarSystemScene.AU;  // 1 AU in 250 pixels
     public static double ZOOM = 1;
     
-    public static final Group root = new Group();
+    public static final Group planetsAnchor = new Group();
+    public static final Group root = new Group(planetsAnchor);
     public static final Scene scene = new Scene(SolarSystemScene.root, 600, 400, true, SceneAntialiasing.BALANCED);
     
     public static final Label timeAccelerationLabel = new Label("Time acceleration: " + SPEED + "x");
     public static final Label zoomLabel = new Label("Zoom: " + ZOOM + "x");
-    public static final AnchorPane labels = new AnchorPane(timeAccelerationLabel, zoomLabel);
+    public static final VBox labels = new VBox(timeAccelerationLabel, zoomLabel);
     
     public static Planet rootPlanet;
     
@@ -57,6 +59,7 @@ public final class SolarSystemScene {
         
         FullscreenController.init(scene);
         Planets.init();
+        FocusController.init();
         CameraController.init();
         TimeController.init();
         
@@ -75,6 +78,8 @@ public final class SolarSystemScene {
         zoomLabel.setFont(new Font("Arial", 15));
     
         labels.setViewOrder(-1);
+        labels.setTranslateX(10);
+        labels.setTranslateY(10);
         
         root.getChildren().add(labels);
     }
@@ -87,18 +92,16 @@ public final class SolarSystemScene {
     }
     
     public static void setRootPlanet(Planet planet) {
+        if (rootPlanet != null) {
+            planetsAnchor.getChildren().remove(rootPlanet.anchor);}
         rootPlanet = planet;
-        root.getChildren().add(planet.anchor);
+        planetsAnchor.getChildren().add(planet.anchor);
+        FocusController.setFocus(rootPlanet);
     }
     
     public static void updateLabels() {
         timeAccelerationLabel.setText("Time acceleration: " + TimeController.getSpeedString());
         zoomLabel.setText("Zoom: " + ZOOM + "x");
-        
-        labels.setTranslateX(-root.getTranslateX() + 10);
-        labels.setTranslateY(-root.getTranslateY() + 10);
-        
-        zoomLabel.setTranslateY(timeAccelerationLabel.getHeight());
     }
     
     public static void update() {
@@ -106,10 +109,10 @@ public final class SolarSystemScene {
         
         for (Planet planet : Planets.all) {
             if (planet.label.getText().equals("Sun") &&
-                    !planet.anchor.getChildren().contains(planet.moonsAnchor)) {
+                    !planet.planetAnchor.getChildren().contains(planet.moonsAnchor)) {
                 planet.label.setText("Solar system"); break;
             } else if (rootPlanet.label.getText().equals("Solar system") &&
-                    planet.anchor.getChildren().contains(planet.moonsAnchor)) {
+                    planet.planetAnchor.getChildren().contains(planet.moonsAnchor)) {
                 planet.label.setText("Sun"); break;
             }
         }

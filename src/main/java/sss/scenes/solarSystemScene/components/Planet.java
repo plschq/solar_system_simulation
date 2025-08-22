@@ -1,10 +1,11 @@
 package sss.scenes.solarSystemScene.components;
 
 
-import javafx.scene.input.MouseEvent;
 import sss.App;
 import sss.Window;
 import sss.dataclasses.Distance;
+import sss.scenes.solarSystemScene.controllers.FocusController;
+import sss.scenes.solarSystemScene.dataclasses.Orbit;
 import sss.dataclasses.Vector;
 import sss.dataclasses.XY;
 import sss.scenes.solarSystemScene.SolarSystemScene;
@@ -15,17 +16,19 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class Planet {
-    
-    public final AnchorPane anchor = new AnchorPane();
-    public final AnchorPane moonsAnchor = new AnchorPane();
-    public ImageView planetImage;
     
     public double mass;
     public XY position = new XY(0, 0);
@@ -33,60 +36,42 @@ public class Planet {
     public Vector velocity = new Vector(new Distance(0), 0);
     
     public String name;
-    
     public Orbit orbit;
-    public final Label label = new Label();
-    
+
     public double minZoom;
     public double priority;
     
-    public boolean isHovered = false;
-    
     public final ArrayList<Planet> moons = new ArrayList<>();
     
+    public final Arc trailPart1 = new Arc();
+    public final Arc trailPart2 = new Arc();
+    public final Arc trailPart3 = new Arc();
+    public final Arc trailPart4 = new Arc();
     
-    public Planet(
-            XY position,
-            double mass,
-            Distance radius,
-            String imagePath,
-            String name,
-            double minZoom,
-            double priority
-    ) throws FileNotFoundException {
-        this.init(
-                position,
-                null,
-                mass,
-                radius,
-                imagePath,
-                name,
-                minZoom,
-                priority
-        );
+    public final ImageView planetImage = new ImageView();
+    public final Label label = new Label();
+    
+    public final AnchorPane moonsAnchor = new AnchorPane();
+    public final AnchorPane orbitAnchor = new AnchorPane(this.trailPart1,
+            this.trailPart2, this.trailPart3, this.trailPart4);
+    public final AnchorPane planetAnchor = new AnchorPane();
+    public final AnchorPane anchor = new AnchorPane(this.orbitAnchor, this.planetAnchor);
+    
+    
+    public Planet(double mass, Distance radius, String imagePath, String name, double minZoom, double priority)
+            throws FileNotFoundException {
+        this.init(new XY(0, 0), null, mass, radius, imagePath, name, minZoom, priority);
     }
     
-    public Planet(
-            Orbit orbit,
-            double mass,
-            Distance radius,
-            String imagePath,
-            String name,
-            double minZoom,
-            double priority
-    ) throws FileNotFoundException {
-        this.init(
-                new XY(0, 0),
-                orbit,
-                mass,
-                radius,
-                imagePath,
-                name,
-                minZoom,
-                priority
-        );
+    public Planet(Orbit orbit, double mass, Distance radius, String imagePath, String name, double minZoom, double priority)
+            throws FileNotFoundException {
+        this.init(new XY(0, 0), orbit, mass, radius, imagePath, name, minZoom, priority);
     }
     
+    
+    // ------------------------------------------------------------------------------------------
+    // --- Init methods -------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------
     
     public void init(
             XY position,
@@ -107,109 +92,134 @@ public class Planet {
         this.priority = priority;
         
         this.velocity.angle = Math.random() * 360;
-    
+        
         this.label.setText(this.name);
-        this.label.setFont(new Font("Arial", 12));
-        this.label.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
-            this.isHovered = true;
-            this.showOrbitBright();
-            this.showLabelBright();
-        }); this.label.addEventHandler(MouseEvent.MOUSE_EXITED, e -> {
-            this.isHovered = false;
-            if (this.priority == -1) {
-                this.showOrbitDim();
-                this.showLabelDim();
-            }
-        });
-    
-        this.planetImage = new ImageView(new Image(new FileInputStream(
-                "src\\main\\resources\\sss\\images\\" + imagePath)));
+        this.label.setFont(new Font("Arial", 11));
+        
+        this.planetImage.setImage(new Image(new FileInputStream(
+                "src\\main\\resources\\sss\\planets\\" + imagePath)));
         this.planetImage.setViewOrder(-1);
         
-        this.anchor.getChildren().add(this.moonsAnchor);
+        if (this.orbit != null) {
+            this.orbit.parent.addMoon(this);
+            
+            this.initTrail(this.trailPart1);
+            this.initTrail(this.trailPart2);
+            this.initTrail(this.trailPart3);
+            this.initTrail(this.trailPart4);
+        }
     }
     
-    public void addMoon(Planet planet) {
-        this.moons.add(planet);
-        this.moonsAnchor.getChildren().add(planet.anchor);
+    public void initTrail(Arc trail) {
+        trail.setType(ArcType.ROUND);
+        trail.setFill(null);
+        trail.setStrokeWidth(2);
+        trail.setType(ArcType.OPEN);
+        trail.setLength(90);
     }
+    
+    // ------------------------------------------------------------------------------------------
+    // --- Show and hide methods ----------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------
     
     public void showPlanetImage() {
-        if (!this.anchor.getChildren().contains(this.planetImage)) {
-            this.anchor.getChildren().add(this.planetImage);
-        }
+        if (!this.planetAnchor.getChildren().contains(this.planetImage)) {
+            this.planetAnchor.getChildren().add(this.planetImage);}
     } public void hidePlanetImage() {
-        this.anchor.getChildren().remove(this.planetImage);
+        this.planetAnchor.getChildren().remove(this.planetImage);
     }
     
     public void showLabelDim() {
-        if (!this.anchor.getChildren().contains(this.label)) {
-            this.anchor.getChildren().add(this.label);
-        } this.label.setTextFill(Color.web("#ccc4"));
+        if (!this.planetAnchor.getChildren().contains(this.label)) {
+            this.planetAnchor.getChildren().add(this.label);
+        } this.label.setTextFill(Color.web("#ccc8"));
     } public void showLabelBright() {
-        if (!this.anchor.getChildren().contains(this.label)) {
-            this.anchor.getChildren().add(this.label);
+        if (!this.planetAnchor.getChildren().contains(this.label)) {
+            this.planetAnchor.getChildren().add(this.label);
         } this.label.setTextFill(Color.web("#ccc"));
     } public void hideLabel() {
-        this.anchor.getChildren().remove(this.label);
-    }
-    
-    public void showOrbitDim() {
-        if (this.orbit != null) {
-            this.orbit.showOrbitDim();
-        }
-    } public void showOrbitBright() {
-        if (this.orbit != null) {
-            this.orbit.showOrbitBright();
-        }
-    } public void hideOrbit() {
-        if (this.orbit != null) {
-            this.orbit.hideOrbit();
-        }
+        this.planetAnchor.getChildren().remove(this.label);
     }
     
     public void showMoons() {
-        if (!this.anchor.getChildren().contains(this.moonsAnchor)) {
-            this.anchor.getChildren().add(this.moonsAnchor);
-        }
+        if (!this.planetAnchor.getChildren().contains(this.moonsAnchor)) {
+            this.planetAnchor.getChildren().add(this.moonsAnchor);}
     } public void hideMoons() {
-        this.anchor.getChildren().remove(this.moonsAnchor);
+        this.planetAnchor.getChildren().remove(this.moonsAnchor);
     }
+    
+    public void showOrbit() {
+        if (!this.anchor.getChildren().contains(this.orbitAnchor)) {
+            this.anchor.getChildren().add(this.orbitAnchor);}
+    } public void hideOrbit() {
+        this.anchor.getChildren().remove(this.orbitAnchor);
+    }
+    
+    // ------------------------------------------------------------------------------------------
+    // --- Update methods -----------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------
     
     public void updatePlanetImage() {
         this.planetImage.setFitWidth(this.radius.getPixels() * 2 * SolarSystemScene.ZOOM);
         this.planetImage.setFitHeight(this.radius.getPixels() * 2 * SolarSystemScene.ZOOM);
         this.planetImage.setTranslateX(-this.planetImage.getFitWidth() * 0.5);
         this.planetImage.setTranslateY(-this.planetImage.getFitHeight() * .5);
+    
+        if (this.radius.getPixels() * 2 * SolarSystemScene.ZOOM <= 1 || this.isPlanetImageOutOfBounds()) {
+            this.hidePlanetImage();
+        } else {this.showPlanetImage();}
     }
     
-    public void updatePosition() {
-        double maxVelocity = Math.sqrt(
-                SolarSystemScene.G * this.orbit.parent.mass *
-                        (2 / this.orbit.perihelion.getMeters() -
-                                1 / this.orbit.getLargeSemiAxis().getMeters()));
-        double minVelocity = Math.sqrt(
-                SolarSystemScene.G * this.orbit.parent.mass *
-                        (2 / this.orbit.aphelion.getMeters() -
-                                1 / this.orbit.getLargeSemiAxis().getMeters()));
+    public void updateLabel() {
+        if (SolarSystemScene.ZOOM < this.minZoom || this.isLabelOutOfBounds()) {
+            this.hideLabel();
+        } else {
+            if (this.priority == 0 || this.radius.getPixels()
+                    * 2 * SolarSystemScene.ZOOM > 0.1) {
+                this.showLabelBright();
+            } else {this.showLabelDim();}
+        }
+    }
+    
+    public void updateMoonsAnchor() {
+        boolean hide = true;
+        for (Planet moon : this.moons) {
+            if (moon.anchor.getChildren().contains(moon.orbitAnchor)) {
+                hide = false; break;}
+        } if (hide) {
+            this.hideMoons();
+        } else {this.showMoons();}
+    }
+    
+    public void updateOrbit() {
+        if (orbit.getSemimajorAxis().getPixels() * SolarSystemScene.ZOOM < 3 || this.isOrbitOutOfBounds()) {
+            this.hideOrbit();
+        } else {
+            this.updateTrail();
+            this.showOrbit();
+        }
+    }
+    
+    public void updateVelocity() {
+        double maxVelocity = this.getOrbitalVelocityByDistance(this.orbit.pericenter);
+        double minVelocity = this.getOrbitalVelocityByDistance(this.orbit.apocenter);
         double averageVelocity = 0.5 * (minVelocity + maxVelocity);
-        double currentVelocity = Math.sqrt(
-                SolarSystemScene.G * this.orbit.parent.mass *
-                        Math.abs(2 / App.getDistanceBetween(this.position, this.orbit.parent.position).getMeters() -
-                                1 / this.orbit.getLargeSemiAxis().getMeters()));
+        double currentVelocity = this.getOrbitalVelocityByDistance(
+                App.getDistanceBetween(this.position, this.orbit.parent.position));
     
         this.velocity.magnitude = new Distance(currentVelocity);
         this.velocity.angle = App.simplifyAngle(
-                this.velocity.angle + (360.0 / 60 / 60 / 24 / this.orbit.treatmentPeriod)
+                this.velocity.angle - (360.0 / 60 / 60 / 24 / this.orbit.getTreatmentPeriod(this.mass))
                         / SolarSystemScene.FPS / averageVelocity * SolarSystemScene.SPEED * currentVelocity);
+    }
     
-        this.position = new XY(
-                this.orbit.center.x.getMeters() + this.orbit.semiAxes.x.getMeters() * Math.sin(Math.toRadians(this.velocity.angle)),
-                this.orbit.center.y.getMeters() - this.orbit.semiAxes.y.getMeters() * Math.cos(Math.toRadians(this.velocity.angle))
-        );
+    public void updatePosition() {
+        this.updateVelocity();
     
-        this.anchor.setTranslateX(this.position.x.getPixels() * SolarSystemScene.ZOOM);
-        this.anchor.setTranslateY(this.position.y.getPixels() * SolarSystemScene.ZOOM);
+        this.position = this.getPlanetPosByAngle(this.velocity.angle);
+    
+        this.planetAnchor.setTranslateX(this.position.x.getPixels() * SolarSystemScene.ZOOM);
+        this.planetAnchor.setTranslateY(this.position.y.getPixels() * SolarSystemScene.ZOOM);
     }
     
     public void updateLabelPosition() {
@@ -217,103 +227,115 @@ public class Planet {
         this.label.setTranslateY(this.radius.getPixels() * SolarSystemScene.ZOOM);
     }
     
-    public void update() {
+    public void updateTrail(Arc trail, int n) {
+        Color[] trailColors = new Color[] {
+                Color.web("#888888"),
+                Color.web("#686868"),
+                Color.web("#555555"),
+                Color.web("#383838"),
+                Color.web("#222222")};
         
-        if (this.orbit != null) {
-            this.orbit.update();
-            this.updatePosition();
-        }
+        trail.setCenterX(this.orbit.center.x.getPixels() * SolarSystemScene.ZOOM);
+        trail.setCenterY(this.orbit.center.y.getPixels() * SolarSystemScene.ZOOM);
+        trail.setRadiusX(this.orbit.semiAxes.x.getPixels() * SolarSystemScene.ZOOM);
+        trail.setRadiusY(this.orbit.semiAxes.y.getPixels() * SolarSystemScene.ZOOM);
+        trail.setStartAngle(-(this.velocity.angle + 90*(n-1)));
+        trail.setStroke(new LinearGradient(
+                1 - 0.5 * (1 + Math.cos(Math.toRadians(this.velocity.angle + 90*(n-1)))),
+                1 - 0.5 * (1 + Math.sin(Math.toRadians(this.velocity.angle + 90*(n-1)))),
+                    0.5 * (1 + Math.cos(Math.toRadians(this.velocity.angle + 90*(n-1)))),
+                    0.5 * (1 + Math.sin(Math.toRadians(this.velocity.angle + 90*(n-1)))),
+                true, CycleMethod.NO_CYCLE, new Stop(0, trailColors[n-1]), new Stop(1, trailColors[n])));
+        
+        
+    } public void updateTrail() {
+        this.updateTrail(this.trailPart1, 1);
+        this.updateTrail(this.trailPart2, 2);
+        this.updateTrail(this.trailPart3, 3);
+        this.updateTrail(this.trailPart4, 4);
+    }
     
-        this.updateLabelPosition();
+    public void update() {
+        if (this.orbit != null) {
+            this.updatePosition();
+            this.updateOrbit();
+        }
+        
         this.updatePlanetImage();
         
+        this.updateLabelPosition();
+        this.updateLabel();
+        
         this.moons.forEach(Planet::update);
-        
-        // Planet image optimization (hiding when too small to display
-        // or the planet is out of bounds)
-        if (this.radius.getPixels() * 2 * SolarSystemScene.ZOOM <= 1 || this.isPlanetImageOutOfBounds()) {
-            this.hidePlanetImage();
-        } else {
-            this.showPlanetImage();
-        }
+        this.updateMoonsAnchor();
     
-        // Orbit optimization (hiding when too small to display
-        // or the orbit is out of bounds)
-        if (this.orbit != null && (this.orbit.getLargeSemiAxis().getPixels() *
-                SolarSystemScene.ZOOM <= 3 || this.isOrbitOutOfBounds())) {
-            this.hideOrbit();
-        } else {
-            if (this.priority == 0 || this.isHovered ||
-                    this.radius.getPixels() * 2 * SolarSystemScene.ZOOM > 0.1) {
-                this.showOrbitBright();
-            } else {this.showOrbitDim();}
+        this.planetAnchor.toFront();
+        this.orbitAnchor.toBack();
+        this.label.toFront();
+        
+        if (Objects.equals(this, FocusController.focusedOn)) {
+            FocusController.updateFocus();
         }
-        
-        // Moons optimization (hiding when too small to display)
-        boolean hide = true;
-        for (Planet moon : this.moons) {
-            if (!moon.orbit.orbitNode.getStroke().equals(Color.TRANSPARENT)) {
-                hide = false; break;}
-        } if (hide) {
-            this.hideMoons();
-        } else {this.showMoons();}
-        
-        // Label optimization
-        if (SolarSystemScene.ZOOM < this.minZoom || this.isLabelOfBounds()) {
-            this.hideLabel();
-        } else {
-            if (this.priority == 0 || this.radius.getPixels()
-                    * 2 * SolarSystemScene.ZOOM > 0.1 || this.isHovered) {
-                this.showLabelBright();
-            } else {this.showLabelDim();}
-        }
-        
+    }
+    
+    // ------------------------------------------------------------------------------------------
+    // --- Other methods ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------
+    
+    public void addMoon(Planet planet) {
+        this.moons.add(planet);
+        this.moonsAnchor.getChildren().add(planet.anchor);
+    }
+    
+    public double getOrbitalVelocityByDistance(Distance distance) {
+        return Math.sqrt(Math.abs(
+                SolarSystemScene.G * this.orbit.parent.mass *
+                        (2 / distance.getMeters() -
+                                1 / this.orbit.getSemimajorAxis().getMeters())));
+    }
+    
+    public XY getPlanetPosByAngle(double angle) {
+        return new XY(
+                this.orbit.center.x.getMeters() + this.orbit.semiAxes.x.getMeters() * Math.sin(Math.toRadians(angle)),
+                this.orbit.center.y.getMeters() - this.orbit.semiAxes.y.getMeters() * Math.cos(Math.toRadians(angle))
+        );
     }
     
     public XY getAbsPos() {
         return (this.orbit != null) ? new XY(
-                this.anchor.getTranslateX() + this.orbit.parent.getAbsPos().x.getMeters(),
-                this.anchor.getTranslateY() + this.orbit.parent.getAbsPos().y.getMeters()
-        ) : new XY(this.anchor.getTranslateX(), this.anchor.getTranslateY());
+                this.planetAnchor.getTranslateX() + this.orbit.parent.getAbsPos().x.getMeters(),
+                this.planetAnchor.getTranslateY() + this.orbit.parent.getAbsPos().y.getMeters()
+        ) : new XY(this.planetAnchor.getTranslateX(), this.planetAnchor.getTranslateY());
     }
     
     public XY getScreenPos() {
         return new XY(
-                this.getAbsPos().x.getMeters() + SolarSystemScene.root.getTranslateX(),
-                this.getAbsPos().y.getMeters() + SolarSystemScene.root.getTranslateY());
+                this.getAbsPos().x.getMeters() + SolarSystemScene.planetsAnchor.getTranslateX(),
+                this.getAbsPos().y.getMeters() + SolarSystemScene.planetsAnchor.getTranslateY());
     }
     
     public boolean isPlanetImageOutOfBounds() {
         final XY screenPos = this.getScreenPos();
-        final double imgWidth = this.planetImage.getFitWidth();
-        final double imgHeight = this.planetImage.getFitHeight();
+        final double n = 20;  // pixels out of bounds allowed
         
-        return !(-2*imgWidth < screenPos.x.getMeters() &&
-                screenPos.x.getMeters() < Window.stage.getWidth() + imgWidth &&
-                -2*imgHeight < screenPos.y.getMeters() &&
-                screenPos.y.getMeters() < Window.stage.getHeight() + imgHeight);
+        return !(0 < screenPos.x.getMeters() + this.planetImage.getTranslateX() + this.planetImage.getFitWidth() + n &&
+                screenPos.x.getMeters() + 20 - this.planetImage.getFitWidth() * 0.5 - n < Window.stage.getWidth() &&
+                0 < screenPos.y.getMeters() + this.planetImage.getTranslateY() + this.planetImage.getFitHeight() + n &&
+                screenPos.y.getMeters() + 40 - this.planetImage.getFitHeight() * 0.5 - n < Window.stage.getHeight());
     }
     
-    public boolean isLabelOfBounds() {
+    public boolean isLabelOutOfBounds() {
         final XY screenPos = this.getScreenPos();
-        final double lblWidth = this.label.getWidth();
-        final double lblHeight = this.label.getHeight();
-        
-        return !(-2*lblWidth < screenPos.x.getMeters() &&
-                screenPos.x.getMeters() < Window.stage.getWidth() + lblWidth &&
-                -2*lblHeight < screenPos.y.getMeters() &&
-                screenPos.y.getMeters() < Window.stage.getHeight() + lblHeight);
+        final double n = 20;  // pixels out of bounds allowed
+    
+        return !(0 < screenPos.x.getMeters() + this.label.getTranslateX() + this.label.getWidth() + n &&
+                screenPos.x.getMeters() + 20 - this.label.getWidth() * 0.5 - n < Window.stage.getWidth() &&
+                0 < screenPos.y.getMeters() + this.label.getTranslateY() + this.label.getHeight() + n &&
+                screenPos.y.getMeters() + 40 - this.label.getHeight() * 0.5 - n < Window.stage.getHeight());
     }
     
     public boolean isOrbitOutOfBounds() {
-        // final XY screenPos = this.getScreenPos();
-        // final double xSemiAxis = this.orbit.orbitNode.getRadiusX();
-        // final double ySemiAxis = this.orbit.orbitNode.getRadiusY();
-        //
-        // return !(-xSemiAxis - 10 < screenPos.x.getMeters() &&
-        //         screenPos.x.getMeters() < Window.stage.getWidth() + xSemiAxis &&
-        //         -2*ySemiAxis < screenPos.y.getMeters() &&
-        //         screenPos.y.getMeters() < Window.stage.getHeight());
+        // ...
         return false;
     }
     

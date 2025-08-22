@@ -16,7 +16,7 @@ public final class Window extends Application {
     
     public static void init(Stage stage) {
         Window.stage = stage;
-        Window.stage.setTitle("Solar System Simulation [v1.1.2]");
+        Window.stage.setTitle("Solar System Simulation [v1.2.0]");
         // Window.stage.setScene();
         Window.stage.setFullScreen(false);
         Window.stage.setAlwaysOnTop(false);
@@ -26,16 +26,18 @@ public final class Window extends Application {
         
         Window.stage.widthProperty().addListener((observable, oldValue, newValue) -> {
             if (Double.isNaN(oldValue.doubleValue())) {
-                SolarSystemScene.root.setTranslateX(0.5 * newValue.doubleValue());
+                SolarSystemScene.planetsAnchor.setTranslateX(0.5 * newValue.doubleValue());
             } else {
-                SolarSystemScene.root.setTranslateX(SolarSystemScene.root.getTranslateX() + 0.5 * (newValue.doubleValue() - oldValue.doubleValue()));
-            } SolarSystemScene.updateLabels();
+                SolarSystemScene.planetsAnchor.setTranslateX(SolarSystemScene.planetsAnchor.getTranslateX() +
+                        0.5 * (newValue.doubleValue() - oldValue.doubleValue()));
+            }
         }); Window.stage.heightProperty().addListener((observable, oldValue, newValue) -> {
             if (Double.isNaN(oldValue.doubleValue())) {
-                SolarSystemScene.root.setTranslateY(0.5 * newValue.doubleValue());
+                SolarSystemScene.planetsAnchor.setTranslateY(0.5 * newValue.doubleValue());
             } else {
-                SolarSystemScene.root.setTranslateY(SolarSystemScene.root.getTranslateY() + 0.5 * (newValue.doubleValue() - oldValue.doubleValue()));
-            } SolarSystemScene.updateLabels();
+                SolarSystemScene.planetsAnchor.setTranslateY(SolarSystemScene.planetsAnchor.getTranslateY() +
+                        0.5 * (newValue.doubleValue() - oldValue.doubleValue()));
+            }
         });
     }
     
